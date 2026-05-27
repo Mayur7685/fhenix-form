@@ -94,8 +94,8 @@ async function init() {
 }
 
 async function getL1Block(): Promise<number> {
-  const block = await pub.getBlock({ blockTag: "latest" })
-  return Number(block.number)
+  const block = await pub.getBlock({ blockTag: "latest" }) as any
+  return Number(block.l1BlockNumber ?? block.number)
 }
 
 async function getGasFees() {

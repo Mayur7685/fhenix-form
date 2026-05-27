@@ -76,7 +76,7 @@ export default function FormBuilder() {
     try {
       const formId = keccak256(encodePacked(['address', 'string', 'uint256'], [address, title, BigInt(Date.now())]))
       const metadataHash = keccak256(stringToHex(title))
-      const durationBlocks = durationUnit === 'blocks' ? durationDays : durationDays * 345600
+      const durationBlocks = durationUnit === 'blocks' ? durationDays : durationDays * 7200 // L1 blocks (~12s each)
       const qTypes = questions.map(q => QTYPE_NUM[q.type])
       const slotCounts = questions.map(q => SLOT_COUNT[q.type] ?? q.options.length)
       const labelHashes = questions.map(q => keccak256(stringToHex(q.text)))

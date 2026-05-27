@@ -37,8 +37,10 @@ export default function FormRespond() {
         const form = await publicClient.readContract({ address: FORMS_CONTRACT, abi: FORMS_ABI, functionName: 'getForm', args: [formId as `0x${string}`] }) as any
         if (!form.exists) { setLoading(false); return }
         setResponseCount(Number(form.responseCount))
-        const block = await publicClient.getBlockNumber()
-        setFormClosed(Number(block) > form.endBlock)
+        const block = await publicClient.getBlock({ blockTag: 'latest' }) as any
+        const l1Block = Number(block.l1BlockNumber ?? block.number)
+        console.log('[FormRespond] l1Block:', l1Block, 'endBlock:', Number(form.endBlock))
+        setFormClosed(l1Block > Number(form.endBlock))
         if (address) {
           const r = await publicClient.readContract({ address: FORMS_CONTRACT, abi: FORMS_ABI, functionName: 'hasResponded', args: [formId as `0x${string}`, address] }) as boolean
           setAlreadyResponded(r)

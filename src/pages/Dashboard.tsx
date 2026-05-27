@@ -38,7 +38,6 @@ export default function Dashboard() {
   }, [publicClient])
 
   const myForms = forms.filter(f => address && f.creator.toLowerCase() === address.toLowerCase())
-  const otherForms = forms.filter(f => !address || f.creator.toLowerCase() !== address.toLowerCase())
 
   return (
     <div className="space-y-6">
@@ -54,9 +53,13 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {loading ? (
+      {!address ? (
+        <div className="bg-white border border-[#e0e8e9] rounded-2xl p-12 text-center">
+          <p className="text-sm text-[#a7aeb1]">Connect your wallet to see your forms.</p>
+        </div>
+      ) : loading ? (
         <div className="flex justify-center py-16"><div className="w-6 h-6 border-2 border-[#64e3e5] border-t-transparent rounded-full animate-spin" /></div>
-      ) : forms.length === 0 ? (
+      ) : myForms.length === 0 ? (
         <div className="bg-white border border-[#e0e8e9] rounded-2xl p-12 text-center">
           <div className="w-16 h-16 bg-[#e0e8e9] rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-[#a7aeb1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -70,20 +73,9 @@ export default function Dashboard() {
           </Link>
         </div>
       ) : (
-        <>
-          {myForms.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold text-[#a7aeb1] uppercase tracking-wide mb-3">Created by you</p>
-              <div className="space-y-2">{myForms.map(f => <FormCard key={f.id} form={f} showShare />)}</div>
-            </div>
-          )}
-          {otherForms.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold text-[#a7aeb1] uppercase tracking-wide mb-3">All forms</p>
-              <div className="space-y-2">{otherForms.map(f => <FormCard key={f.id} form={f} />)}</div>
-            </div>
-          )}
-        </>
+        <div className="space-y-2">
+          {myForms.map(f => <FormCard key={f.id} form={f} showShare />)}
+        </div>
       )}
     </div>
   )
